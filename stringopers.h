@@ -12,4 +12,6 @@ void strip(std::string&);
 
 std::string getSplitIndex(std::string str, std::string delimiter, int index);
 
+void splitToNum(std::string str, std::string delimiter, std::vector<long long>& tokens);
+
 #endif

@@ -36,6 +36,15 @@ void split(std::string str, std::string delimiter, std::vector<std::string>& tok
     tokens.push_back(str.substr(start));
 }
 
+void splitToNum(std::string str, std::string delimiter, std::vector<long long>& tokens){
+    std::istringstream iss(str);
+    std::string word;
+    while(iss >> word){
+        strip(word);
+        tokens.push_back(std::stoi(word));
+    }
+}
+
 void strip(std::string& str){
     size_t start = str.find_first_not_of(" \n\r\t");
     size_t end = str.find_last_not_of(" \n\r\t");
