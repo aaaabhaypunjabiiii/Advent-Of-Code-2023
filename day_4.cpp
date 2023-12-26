@@ -10,6 +10,8 @@
 using namespace std;
 // std::string str, std::string delimiter, std::vector<long long>& tokens
 
+// modified for 4.2
+std::vector<unsigned long long> numberOfCards;
 long long getWinningNumbers(std::vector<std::string>& vec){
     long long longNums = 0;
     std::string winningNumbersStr = vec[0];
@@ -26,11 +28,7 @@ long long getWinningNumbers(std::vector<std::string>& vec){
     for(std::vector<long long>::iterator it = numbersYouHave.begin(); it != numbersYouHave.end(); it++){
         auto check = winners.find(*it);
         if(check != winners.end()){
-            if(longNums == 0){
-                longNums = 1;
-                continue;
-            }
-            longNums = (longNums * 2);
+            longNums++;// = (longNums * 2);
         }
     }
 
@@ -43,16 +41,39 @@ int main(){
 
     while(getline(inputFile, line)){
         input.push_back(line);
+        numberOfCards.push_back(1);
     }
-    long long aggrSum = 0;
+
+    long long index = 0;
+    unsigned long long aggrSum = 0;
+
     for(std::vector<std::string>::iterator it = input.begin(); it != input.end(); it++){
         std::string second = getSplitIndex(*it, ":", 1);
         strip(second);
         std::vector<std::string> parse;
         split(second, "|", parse);
         
-        aggrSum += getWinningNumbers(parse);
+        long long current =  getWinningNumbers(parse);
+        if(current == 0){
+            index++;
+            continue;
+        }
+        
+        // cout << "current "<< current << endl;
+        for(int i = index + 1; i <= index + current; i++){
+            if((index + 1) == (numberOfCards.size())){
+                break;
+            }
+            numberOfCards[i] += numberOfCards[index];            
+        }
+        index++;
     }
+    
+    for(std::vector<unsigned long long>::iterator it = numberOfCards.begin(); it != numberOfCards.end(); it++){
+        aggrSum += (*it);
+        // cout << "num is "<< *it << endl;
+    }
+
     cout << aggrSum << endl;
     return 0;
 }
