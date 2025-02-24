@@ -159,25 +159,25 @@ void addBag(pairOfBags p1){
 
 
 int main(){
-    // std::ofstream outFile("output.txt");
-    // std::cout.rdbuf(outFile.rdbuf());
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int count;
+    cin >> count;
+    while(count--){
+        // reset vars here
+        discovered = std::map<pairOfBags, bool>();
+        frontier  = std::map<pairOfBags, bool>();
+        maxKey = -1;
+        isEven = false;
+        solutionFound = false;
+        pairOfBags p = pairOfBags();
 
-
-    ifstream file("input.txt");
-    string str;
-
-    // int count = std::stoi(str); // read first line
-    // while(){
-
-
-    //     --count;
-    // }
-    std::getline(file, str);
-    int nums = std::stoi(str); // read first line
-    while(std::getline(file, str)){
-        std::stringstream ss(str);
-        int curr;
-        while(ss >> curr){
+        int numbers;
+        cin >> numbers;
+        
+        for(int i = 0; i < numbers; i++){
+            int curr;
+            cin >> curr; 
             if(p.bag1.find(curr) != p.bag1.end()){
                 p.bag1[curr]++;
             }  
@@ -186,22 +186,19 @@ int main(){
                 p.bag2[curr] = 0;
             }
         }
-    }
-    discovered[p] = true;
 
-    auto dictIter = p.bag1.rbegin();
-    maxKey = dictIter->first;
-    // cout << "Max key is " << maxKey << endl;
-    
-    // cout << p << endl;
-    moveBetweenBags(p);
-    addBag(p);
-    if(solutionFound){
-        cout << "Yes" << endl;
+        discovered[p] = true;
+        auto dictIter = p.bag1.rbegin();
+        maxKey = dictIter->first;
+        
+        moveBetweenBags(p);
+        addBag(p);
+        if(solutionFound){
+            cout << "Yes" << endl;
+        }
+        else{
+            cout << "No" << endl;
+        }
     }
-    else{
-        cout << "No" << endl;
-    }
-    // outFile.close();
     return 0;
 }
