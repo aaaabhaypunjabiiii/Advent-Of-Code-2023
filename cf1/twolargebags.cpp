@@ -19,44 +19,14 @@ struct pairOfBags{
         return bag2 < other.bag2;
     }
 };
-std::ostream& operator<<(std::ostream& os, const pairOfBags& p) {
-    os << "Bag 1: {";
-    for (const auto& [key, value] : p.bag1) {
-        os << key << ":" << value << ", ";
-    }
-    os << "}\n";
 
-    os << "Bag 2: {";
-    for (const auto& [key, value] : p.bag2) {
-        os << key << ":" << value << ", ";
-    }
-    os << "}\n";
-
-    return os;
-}
 void solution(pairOfBags p1);
-void addBag(pairOfBags p1);
-void moveBetweenBags(pairOfBags p1);
-
-std::map<pairOfBags, bool> discovered;
-std::map<pairOfBags, bool> frontier;
-int maxKey = -1;
-
-bool isEven = false, solutionFound = false;
-pairOfBags p;
-
-bool isEvenCheck(pairOfBags p1){
-    // cout << (p1.bag1 == p1.bag2) << endl;
-    // cout << p1 << endl; 
-    return (p1.bag1 == p1.bag2);
-}
 
 void solution(pairOfBags p1){
     int sum = 0;
     for(const auto& pair: p1.bag1){
         sum += pair.second;
     }
-
 
     auto it = p1.bag1.begin();
     auto dictIter = p1.bag1.rbegin();
@@ -78,7 +48,7 @@ void solution(pairOfBags p1){
         
         if(p1.bag1 == p1.bag2){
             cout << "Yes" << endl;
-            break;
+            return;
         }
 
         if(p1.bag1[key] > 1 && p1.bag1[key] > 0){
@@ -90,9 +60,8 @@ void solution(pairOfBags p1){
 
         if(p1.bag1 == p1.bag2){
             cout << "Yes" << endl;
-            break;
+            return;
         }
-
         ++it;
     }
 
@@ -112,12 +81,6 @@ int main(){
     int count;
     cin >> count;
     while(count--){
-        // reset vars here
-        discovered = std::map<pairOfBags, bool>();
-        frontier  = std::map<pairOfBags, bool>();
-        maxKey = -1;
-        isEven = false;
-        solutionFound = false;
         pairOfBags p = pairOfBags();
 
         int numbers;
