@@ -34,7 +34,7 @@ std::ostream& operator<<(std::ostream& os, const pairOfBags& p) {
 
     return os;
 }
-
+void solution(pairOfBags p1);
 void addBag(pairOfBags p1);
 void moveBetweenBags(pairOfBags p1);
 
@@ -51,109 +51,56 @@ bool isEvenCheck(pairOfBags p1){
     return (p1.bag1 == p1.bag2);
 }
 
-void moveBetweenBags(pairOfBags p1){
-    if(solutionFound){
-        return;
-    }
-    bool advance = false;
-    if(((frontier.find(p1) != frontier.end()) && !frontier[p1])){
-        // cout << "************" << endl;
-        // cout << "Frontier explored" << endl;
-        // cout << p1 << endl;
-        // cout << "************" << endl;
-        return;
-    }
-    else if(isEvenCheck(p1)){
-        solutionFound = true;
-        // cout << "************" << endl;
-        // cout << "SOLUTION FOUND" << endl;
-        // cout << p1 << endl;
-        // cout << "************" << endl;
-        return;
+void solution(pairOfBags p1){
+    int sum = 0;
+    for(const auto& pair: p1.bag1){
+        sum += pair.second;
     }
 
 
-    //cout << "MOVE" << p1 << endl;
-    for(auto const&x : p1.bag1){
-        if(p1.bag1[x.first] == 0){
-            continue;
+    auto it = p1.bag1.begin();
+    auto dictIter = p1.bag1.rbegin();
+    int maxKey = dictIter->first;
+
+    while(it != p1.bag1.end()){        
+        auto key = it->first;
+        auto val = it->second;
+
+        if((key == maxKey) && !(val % 2)){
+            val = val / 2;
+            p1.bag1[key] = val;
+            p1.bag2[key] = val;
+            break;
         }
-        p1.bag1[x.first]--;
-        p1.bag2[x.first]++;
-        if(discovered.find(p1) != discovered.end()){
-            p1.bag1[x.first]++;
-            p1.bag2[x.first]--;
+
+        p1.bag1[key] -= 1;
+        p1.bag2[key] += 1;
+        
+        if(p1.bag1 == p1.bag2){
+            cout << "Yes" << endl;
+            break;
         }
-        else{
-            discovered[p1] = true;
-            advance = true;
-            moveBetweenBags(p1);
-            addBag(p1);        }
-    }
 
-    if(!advance){
-        frontier[p1] = false;
-        return;
-    }
-}
-
-void addBag(pairOfBags p1){
-    bool advance = false;
-    if(solutionFound){
-        return;
-    }
-
-    if(((frontier.find(p1) != frontier.end()) && !frontier[p1]) || (p1.bag2 == p.bag1)){
-        // cout << "************" << endl;
-        // cout << "Frontier explored" << endl;
-        // cout << p1 << endl;
-        // cout << "************" << endl;
-        return;
-    }
-    else if(isEvenCheck(p1)){
-        solutionFound = true;
-        // cout << "************" << endl;
-        // cout << "SOLUTION FOUND" << endl;
-        // cout << p1 << endl;
-        // cout << "************" << endl;
-        return;
-    }
-
-    //cout << "ADD" << p1 << endl;
-    for(auto const&x : p1.bag1){
-        if(p1.bag2.find(x.first) != p1.bag2.end()){
-            if(p1.bag1[x.first] == 0 || p1.bag2[x.first] == 0){
-                continue;
-            } 
-            int oldKey = x.first;
-            int newKey = oldKey + 1;
-
-            // don't go higher than the maxKey
-            if(newKey > maxKey){
-                continue;
-            }
-            p1.bag1[newKey] += 1;
-
-            p1.bag1[oldKey] -= 1;
-            
-
-            if(discovered.find(p1) != discovered.end()){
-                p1.bag1[oldKey] += 1;
-                p1.bag1[newKey] -= 1;
-            }
-            else{
-                discovered[p1] = true;
-                advance = true;
-                moveBetweenBags(p1);
-                addBag(p1);
-            }
+        if(p1.bag1[key] > 1 && p1.bag1[key] > 0){
+            p1.bag1[key] = 1;
+            key += 1;
+            p1.bag1[key] += (val - 2);
         }
-    }
-    // cout << p1;
 
-    if(!advance){
-        frontier[p1] = false;
-        return;
+
+        if(p1.bag1 == p1.bag2){
+            cout << "Yes" << endl;
+            break;
+        }
+
+        ++it;
+    }
+
+    if(p1.bag1 == p1.bag2){
+        cout << "Yes" << endl;
+    }
+    else{
+        cout << "No" << endl;
     }
 }
 
@@ -161,6 +108,7 @@ void addBag(pairOfBags p1){
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+
     int count;
     cin >> count;
     while(count--){
@@ -187,18 +135,7 @@ int main(){
             }
         }
 
-        discovered[p] = true;
-        auto dictIter = p.bag1.rbegin();
-        maxKey = dictIter->first;
-        
-        moveBetweenBags(p);
-        addBag(p);
-        if(solutionFound){
-            cout << "Yes" << endl;
-        }
-        else{
-            cout << "No" << endl;
-        }
+        solution(p);
     }
     return 0;
 }
